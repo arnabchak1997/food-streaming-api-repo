@@ -2,15 +2,22 @@ from fastapi import FastAPI, Query
 import pandas as pd
 import boto3
 from io import StringIO
+from botocore.exceptions  import NoCredentialsError, PartialCredentialsError
 import uvicorn
 
 
 app = FastAPI()
 
+s3_client = boto3.client( 's3', aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'), aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'), region_name='ap-southeast-1' )
+
+BUCKET_NAME = 'food-streaming-data-bucket' 
+FILE_NAME = 'total_data.csv'
+
 def fetch_data(year: int = None, country: str = None, market: str = None):
     try:
         # Load CSV content into a pandas DataFrame
-        df = pd.read_csv("https://food-streaming-data-bucket.s3.ap-southeast-1.amazonaws.com/total_data.csv")
+        read_file = s3_client.get_object(bucket=BUCKET_NAME)
+        df = pd.read_csv(read_file['Body'],sep=',')
 
         print(df.shape[0])
         # Apply filters based on provided parameters
