@@ -17,7 +17,7 @@ FILE_NAME = 'total_data.csv'
 def fetch_data(year: int = None, country: str = None, market: str = None):
     try:
         # Load CSV content into a pandas DataFrame
-        read_file = s3_client.get_object(bucket=BUCKET_NAME , key=FILE_NAME)
+        read_file = s3_client.get_object(bucket='food-streaming-data-bucket' , key='total_data.csv')
         df = pd.read_csv(read_file['Body'],sep=',')
 
         print(df.shape[0])
