@@ -4,6 +4,7 @@ import boto3
 from io import StringIO
 from botocore.exceptions  import NoCredentialsError, PartialCredentialsError
 import uvicorn
+import os
 
 
 app = FastAPI()
