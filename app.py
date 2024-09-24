@@ -11,13 +11,11 @@ app = FastAPI()
 
 s3_client = boto3.client( 's3', aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'), aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'), region_name='ap-southeast-1' )
 
-BUCKET_NAME = 'food-streaming-data-bucket' 
-FILE_NAME = 'total_data.csv'
-
 def fetch_data(year: int = None, country: str = None, market: str = None):
     try:
+        # Retrieve the object from S3
+        read_file = s3_client.get_object(Bucket='food-streaming-data-bucket', Key='total_data.csv')
         # Load CSV content into a pandas DataFrame
-        read_file = s3_client.get_object(bucket='food-streaming-data-bucket' , key='total_data.csv')
         df = pd.read_csv(read_file['Body'],sep=',')
 
         print(df.shape[0])
